@@ -61,10 +61,3 @@ stages:
               runOptions: 'commands'
               commands: 'sudo cp /tmp/ToDoApp-Frontend-Artifact/* /var/www/html/ -r'
               readyTimeout: '20000'
-          - task: SSH@0
-            displayName: "nginx Restart"
-            inputs:
-              sshEndpoint: 'Frontend-SSH'
-              runOptions: 'commands'
-              commands: 'systemctl restart nginx'
-              readyTimeout: '20000'

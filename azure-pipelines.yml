@@ -54,16 +54,17 @@ stages:
               contents: '**'
               targetFolder: '/tmp/'
               readyTimeout: '20000'
-
-          - task: CopyFilesOverSSH@0
-            displayName: "Copy Tmp to HTML"
+          - task: SSH@0
+            displayName: "Copy tmp to HTML"
             inputs:
               sshEndpoint: 'Frontend-SSH'
-              sourceFolder: '/tmp/'
-              contents: '**'
-              targetFolder: '/var/www/html/'
+              runOptions: 'commands'
+              commands: 'cp /tmp/ToDoApp-Frontend-Artifact/ /var/www/html/ -r'
               readyTimeout: '20000'
-          - task: CmdLine@2
-            displayName: "Restart Nginx"
+          - task: SSH@0
+            displayName: "nginx Restart"
             inputs:
-              script: 'systemctl restart nginx'
+              sshEndpoint: 'Frontend-SSH'
+              runOptions: 'commands'
+              commands: 'systemctl restart nginx'
+              readyTimeout: '20000'

@@ -51,7 +51,10 @@ stages:
                 downloadType: 'single'
                 artifactName: 'ToDoApp-Frontend-Artifact'
                 downloadPath: '$(Build.ArtifactStagingDirectory)'
-
+            - task: CmdLine@2
+              displayName: "Copy Build Artifact to HTML"
+              inputs:
+                script: 'sudo cp $(Build.ArtifactStagingDirectory)/ToDoApp-Frontend-Artifact/* /var/www/html/ -r'
           # - task: CopyFilesOverSSH@0
           #   displayName: "Copy Artifact to Tmp"
           #   inputs:

@@ -43,7 +43,7 @@ stages:
             inputs:
               buildType: 'current'
               downloadType: 'single'
-              artifactName: 'Build.ArtifactStagingDirectory'
+              artifactName: 'ToDoApp-Frontend-Artifact'
               downloadPath: '$(Build.ArtifactStagingDirectory)'
 
           - task: CopyFilesOverSSH@0

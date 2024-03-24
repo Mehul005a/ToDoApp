@@ -59,7 +59,7 @@ stages:
             inputs:
               sshEndpoint: 'Frontend-SSH'
               runOptions: 'commands'
-              commands: 'cp /tmp/ToDoApp-Frontend-Artifact/ /var/www/html/ -r'
+              commands: 'sudo cp /tmp/ToDoApp-Frontend-Artifact/* /var/www/html/ -r'
               readyTimeout: '20000'
           - task: SSH@0
             displayName: "nginx Restart"

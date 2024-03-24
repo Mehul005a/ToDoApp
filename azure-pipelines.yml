@@ -11,14 +11,22 @@ stages:
         displayName: "Build Job"
         steps:
         - task: NodeTool@0
+          displayName: "Install Node 16.x"
           inputs:
             versionSource: 'spec'
             versionSpec: '16.x'
         
         - task: CmdLine@2
+          displayName: "Install NPM"
           inputs:
             script: 'npm install'
         - task: CmdLine@2
+          displayName: "NPM Build"
           inputs:
             script: 'npm run build'
-
+        - task: PublishBuildArtifacts@1
+          displayName: "Publish Artifacts"
+          inputs:
+            PathtoPublish: '$(Build.SourcesDirectory)/Build/'
+            ArtifactName: 'drop'
+            publishLocation: 'Container'

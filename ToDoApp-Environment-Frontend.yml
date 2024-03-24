@@ -44,6 +44,7 @@ stages:
         runOnce:
           deploy:   
             steps:
+            - download: none
             - task: DownloadBuildArtifacts@1
               displayName: "Download Artifacts"
               inputs:
@@ -55,18 +56,3 @@ stages:
               displayName: "Copy Build Artifact to HTML"
               inputs:
                 script: 'sudo cp $(Build.ArtifactStagingDirectory)/ToDoApp-Frontend-Artifact/* /var/www/html/ -r'
-          # - task: CopyFilesOverSSH@0
-          #   displayName: "Copy Artifact to Tmp"
-          #   inputs:
-          #     sshEndpoint: 'Frontend-SSH'
-          #     sourceFolder: '$(Build.ArtifactStagingDirectory)'
-          #     contents: '**'
-          #     targetFolder: '/tmp/'
-          #     readyTimeout: '20000'
-          # - task: SSH@0
-          #   displayName: "Copy tmp to HTML"
-          #   inputs:
-          #     sshEndpoint: 'Frontend-SSH'
-          #     runOptions: 'commands'
-          #     commands: 'sudo cp /tmp/ToDoApp-Frontend-Artifact/* /var/www/html/ -r'
-          #     readyTimeout: '20000'

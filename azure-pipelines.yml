@@ -27,6 +27,6 @@ stages:
         - task: PublishBuildArtifacts@1
           displayName: "Publish Artifacts"
           inputs:
-            PathtoPublish: '$(Build.SourcesDirectory)/Build/'
+            PathtoPublish: '$(Build.SourcesDirectory)'
             ArtifactName: 'ToDoApp-Frontend-Artifact'
             publishLocation: 'Container'

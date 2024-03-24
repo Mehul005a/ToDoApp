@@ -32,11 +32,11 @@ stages:
             publishLocation: 'Container'
 
   - stage: DeployStage
-    displayName: "Deploy Stage"
+    displayName: "DEV Deploy Stage"
     dependsOn: BuildStage
     jobs:
     - deployment: VMDeploy
-      displayName: Deploy to VM
+      displayName: "Deploy to VM DEV"
       environment: 
         name: ToDoApp DEV
         resourceType: virtualMachine

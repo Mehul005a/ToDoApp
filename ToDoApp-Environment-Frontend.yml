@@ -35,29 +35,35 @@ stages:
     displayName: "Deploy Stage"
     dependsOn: BuildStage
     jobs:
-        - job: DeployJob
-          displayName: "Deploy Job"
-          steps:
-          - task: DownloadBuildArtifacts@1
-            displayName: "Download Artifacts"
-            inputs:
-              buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'ToDoApp-Frontend-Artifact'
-              downloadPath: '$(Build.ArtifactStagingDirectory)'
+    - deployment: VMDeploy
+      displayName: Deploy to VM
+      environment: 
+        name: ToDoApp DEV
+        resourceType: virtualMachine
+      strategy:
+        runOnce:
+          deploy:   
+            steps:
+            - task: DownloadBuildArtifacts@1
+              displayName: "Download Artifacts"
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'ToDoApp-Frontend-Artifact'
+                downloadPath: '$(Build.ArtifactStagingDirectory)'
 
-          - task: CopyFilesOverSSH@0
-            displayName: "Copy Artifact to Tmp"
-            inputs:
-              sshEndpoint: 'Frontend-SSH'
-              sourceFolder: '$(Build.ArtifactStagingDirectory)'
-              contents: '**'
-              targetFolder: '/tmp/'
-              readyTimeout: '20000'
-          - task: SSH@0
-            displayName: "Copy tmp to HTML"
-            inputs:
-              sshEndpoint: 'Frontend-SSH'
-              runOptions: 'commands'
-              commands: 'sudo cp /tmp/ToDoApp-Frontend-Artifact/* /var/www/html/ -r'
-              readyTimeout: '20000'
+          # - task: CopyFilesOverSSH@0
+          #   displayName: "Copy Artifact to Tmp"
+          #   inputs:
+          #     sshEndpoint: 'Frontend-SSH'
+          #     sourceFolder: '$(Build.ArtifactStagingDirectory)'
+          #     contents: '**'
+          #     targetFolder: '/tmp/'
+          #     readyTimeout: '20000'
+          # - task: SSH@0
+          #   displayName: "Copy tmp to HTML"
+          #   inputs:
+          #     sshEndpoint: 'Frontend-SSH'
+          #     runOptions: 'commands'
+          #     commands: 'sudo cp /tmp/ToDoApp-Frontend-Artifact/* /var/www/html/ -r'
+          #     readyTimeout: '20000'

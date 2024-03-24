@@ -1,0 +1,69 @@
+trigger : none
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: BuildStage
+    displayName: "Build Stage"
+    jobs:
+      - job: BuildJob
+        displayName: "Build Job"
+        steps:
+        - task: NodeTool@0
+          displayName: "Install Node 16.x"
+          inputs:
+            versionSource: 'spec'
+            versionSpec: '16.x'
+        
+        - task: CmdLine@2
+          displayName: "Install NPM"
+          inputs:
+            script: 'npm install'
+        - task: CmdLine@2
+          displayName: "NPM Build"
+          inputs:
+            script: 'npm run build'
+        - task: PublishBuildArtifacts@1
+          displayName: "Publish Artifacts"
+          inputs:
+            PathtoPublish: '$(Build.SourcesDirectory)/build/'
+            ArtifactName: 'ToDoApp-Frontend-Artifact'
+            publishLocation: 'Container'
+
+  - stage: DeployStage
+    displayName: "Deploy Stage"
+    dependsOn: BuildStage
+    jobs:
+        - job: DeployJob
+          displayName: "Deploy Job"
+          steps:
+          - task: DownloadBuildArtifacts@1
+            displayName: "Download Artifacts"
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'Build.ArtifactStagingDirectory'
+              downloadPath: '$(Build.ArtifactStagingDirectory)'
+
+          - task: CopyFilesOverSSH@0
+            displayName: "Copy Artifact to Tmp"
+            inputs:
+              sshEndpoint: 'Frontend-SSH'
+              sourceFolder: '$(Build.ArtifactStagingDirectory)'
+              contents: '**'
+              targetFolder: '/tmp/'
+              readyTimeout: '20000'
+
+          - task: CopyFilesOverSSH@0
+            displayName: "Copy Tmp to HTML"
+            inputs:
+              sshEndpoint: 'Frontend-SSH'
+              sourceFolder: '/tmp/'
+              contents: '**'
+              targetFolder: '/var/www/html/'
+              readyTimeout: '20000'
+          - task: CmdLine@2
+            displayName: "Restart Nginx"
+            inputs:
+              script: 'systemctl restart nginx'
